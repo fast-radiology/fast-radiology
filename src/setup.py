@@ -1,18 +1,16 @@
 import setuptools
 
-try:  # for pip >= 10
-    from pip._internal.req import parse_requirements
-except ImportError:  # for pip <= 9.0.3
-    from pip.req import parse_requirements
+def parse_requirements(filename):
+    """ load requirements from a pip requirements file """
+    lines = (line.strip() for line in open(filename))
+    return [line for line in lines if line and not line.startswith("#")]
 
-
-install_reqs = parse_requirements('requirements.txt', session=False)
-reqs = [str(ir.req) for ir in install_reqs]
+requirements = parse_requirements('requirements.txt')
 
 setuptools.setup(
     name="fast-radiology",
     setup_cfg=True,
-    install_requires=reqs,
+    install_requires=requirements,
     packages=["fast_radiology"],
     package_dir={"fast_radiology": "fast_radiology"},
 )
